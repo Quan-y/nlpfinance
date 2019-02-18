@@ -20,6 +20,8 @@ plt.rcParams.update(params)
 
 cleaned_data = pd.read_csv('../result/brexitText_cleaned.csv')
 cleaned_data = cleaned_data.fillna("")
+cleaned_data.index = cleaned_data['time']
+cleaned_data = cleaned_data[cleaned_data['body'] != '']
 
 Visual = Sentvisual()
 Textsent = Textblob()
@@ -27,11 +29,15 @@ Textsent = Textblob()
 bodyResult = Textsent.fit(cleaned_data['body'])
 headResult = Textsent.fit(cleaned_data['headline'])
 
+bodyResult = bodyResult.sort_index()
+headResult = headResult.sort_index()
+
 bodyResult.plot(title = "Body polar and subj", subplots = True)
 headResult.plot(title = "Head polar and subj", subplots = True)
 
 Visual.pie(bodyResult)
 Visual.pie(headResult)
 
-#bodyResult.to_csv('bodysentiment.csv')
-#headResult.to_csv('headsentiment.csv')
+bodyResult.to_csv('../result/bodysentiment.csv')
+headResult.to_csv('../result/headsentiment.csv')
+
